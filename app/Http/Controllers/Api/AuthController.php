@@ -34,9 +34,9 @@ class AuthController extends BaseController
             $success['token'] =  $user->createToken('motoringapp')->plainTextToken;
             $success['user'] =  $user;
             return $this->sendResponse($success, 'User login successfully.');
-        }else{
-           $response = ['message'=>'invalid email or password'];
-           return response()->json($response,400);
+        } else {
+            $response = ['message' => 'invalid email or password'];
+            return response()->json($response, 400);
         }
         return response()->json($validator->validated());
     }
@@ -68,14 +68,13 @@ class AuthController extends BaseController
             return $this->sendError('Validation Error.', $validator->errors());
         }
         $user = User::whereEmail($request->email)->first();
-        if($user){
+        if ($user) {
             $credentials = $validator->validated();
 
             Password::sendResetLink($credentials);
 
             return $this->sendResponse([], 'User register successfully.');
-
-        }else{
+        } else {
             return $this->sendError('User with email not found', $validator->errors());
         }
     }
@@ -118,12 +117,13 @@ class AuthController extends BaseController
          * Return the appropriate message.
          */
     }
-    public function verifyEmail(Request $request){
+    public function verifyEmail(Request $request)
+    {
         $code = OtpCode::whereEmail($request->email)->first();
         // return  $this->sendResponse($code->code, 'Email verified Successfully');
-        if($code  && $code->code == $request->code){
+        if ($code  && $code->code == $request->code) {
             return $this->sendResponse([], 'Email verified Successfully');
-        }else{
+        } else {
             return $this->sendError('Otp verification failed', []);
         }
     }
@@ -132,9 +132,9 @@ class AuthController extends BaseController
     {
         $user = User::whereUsername($request->username)->first();
 
-        if($user){
-            return $this->sendError('Username unavailable',[]);
-        }else{
+        if ($user) {
+            return $this->sendError('Username unavailable', []);
+        } else {
             return $this->sendResponse([], 'Username available');
         }
     }
@@ -142,9 +142,9 @@ class AuthController extends BaseController
     {
         $user = User::whereEmail($request->email)->first();
 
-        if($user){
-            return $this->sendError('Email is already used',[]);
-        }else{
+        if ($user) {
+            return $this->sendError('Email is already used', []);
+        } else {
             return $this->sendResponse([], 'Email available');
         }
     }
@@ -155,9 +155,31 @@ class AuthController extends BaseController
         $twilio_sid = getenv("TWILIO_SID");
         $twilio_verify_sid = getenv("TWILIO_VERIFY_SID");
         $twilio = new Client($twilio_sid, $token);
-        $twilio->verify->v2->services($twilio_verify_sid)
+        try {
+            $twilio->verify->v2->services($twilio_verify_sid)
             ->verifications
             ->create($request->mobile_number, "sms");
+            return $this->sendResponse([], 'Otp sent successfully.');
+        } catch (\Throwable $th) {
+            return $this->sendError('Unable to send otp', []);
+        }
+
     }
 
+    public function verifyMobile(Request $request)
+    {
+
+        $token = getenv("TWILIO_AUTH_TOKEN");
+        $twilio_sid = getenv("TWILIO_SID");
+        $twilio_verify_sid = getenv("TWILIO_VERIFY_SID");
+        $twilio = new Client($twilio_sid, $token);
+        $verification = $twilio->verify->v2->services($twilio_verify_sid)
+            ->verificationChecks
+            ->create($request->verification_code, array('to' => $request->phone_number));
+        if ($verification->valid) {
+            return $this->sendResponse([], 'Mobile verified Successfully');
+        }else{
+            return $this->sendError('Otp verification failed', []);
+        }
+    }
 }
