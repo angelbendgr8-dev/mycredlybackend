@@ -3,16 +3,17 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\User;
+use App\Models\OtpCode;
+use Twilio\Http\Client;
 use App\Mail\ConfirmEmail;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use PhpParser\Node\Stmt\TryCatch;
 use App\Http\Controllers\Controller;
-use App\Models\OtpCode;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
-use PhpParser\Node\Stmt\TryCatch;
 
 class AuthController extends BaseController
 {
@@ -81,7 +82,7 @@ class AuthController extends BaseController
 
     public function confirmEmail(Request $request)
     {
-        // return Str::random(4);
+        // return Str::random(5);
         /**
          * Store a receiver email address to a variable.
          */
@@ -146,6 +147,17 @@ class AuthController extends BaseController
         }else{
             return $this->sendResponse([], 'Email available');
         }
+    }
+
+    public function confirmMobile(Request $request)
+    {
+        $token = getenv("TWILIO_AUTH_TOKEN");
+        $twilio_sid = getenv("TWILIO_SID");
+        $twilio_verify_sid = getenv("TWILIO_VERIFY_SID");
+        $twilio = new Client($twilio_sid, $token);
+        $twilio->verify->v2->services($twilio_verify_sid)
+            ->verifications
+            ->create($request->mobile_number, "sms");
     }
 
 }

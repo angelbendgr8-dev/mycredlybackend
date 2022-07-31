@@ -33,6 +33,8 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('auth/register', 'register');
     Route::post('confirm/email', 'confirmEmail');
     Route::post('verify/email', 'verifyEmail');
+    Route::post('confirm/mobile', 'confirmMobile');
+    Route::post('verify/mobile', 'verifyMobile');
     Route::post('check/email', 'checkEmail');
     Route::post('check/username', 'checkUsername');
     Route::post('auth/forgot-password', 'forgotPassword');

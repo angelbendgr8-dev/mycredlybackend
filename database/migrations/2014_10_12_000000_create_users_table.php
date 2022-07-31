@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('first_name');
             $table->string('last_name');
             $table->string('username')->unique();
-            $table->string('mobile_number');
+            $table->string('mobile_number')->unique();
+            $table->boolean('isVerified')->default(false);
             $table->string('country');
             $table->string('code');
             $table->string('profile_pics')->nullable();
