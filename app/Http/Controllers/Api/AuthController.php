@@ -4,12 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\User;
 use App\Models\OtpCode;
-use Twilio\Http\Client;
+use Twilio\Rest\Client;
 use App\Mail\ConfirmEmail;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use PhpParser\Node\Stmt\TryCatch;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
