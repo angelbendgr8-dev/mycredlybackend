@@ -87,7 +87,7 @@ class AuthController extends BaseController
 
         // generate otp code for user to use
 
-        $code = Str::random(4);
+        $code = Str::random(5);
         $otp = new OtpCode();
         $otp->code = $code;
         $otp->email = $request->email;
