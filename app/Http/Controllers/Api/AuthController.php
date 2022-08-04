@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\OtpCode;
 use Twilio\Rest\Client;
@@ -9,6 +10,7 @@ use App\Mail\ConfirmEmail;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
@@ -42,34 +44,39 @@ class AuthController extends BaseController
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
+            'last_name' => 'required',
+            'first_name' => 'required',
+            'username' => 'required|unique:users',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:8',
+            'mobile_number' => 'required',
+            'country' => 'required',
+            'code' => 'required',
         ]);
 
         if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors());
         }
         $input = $request->all();
-        $input['password'] = bcrypt($input['password']);
+        $input['password'] = Hash::make($input['password']);
+        $input['isVerified'] = true;
+        $input['email_verified_at'] = Carbon::now();
         $user = User::create($input);
-        $success['token'] =  $user->createToken('motoringapp')->plainTextToken;
+        $success['token'] =  $user->createToken('mycredly')->plainTextToken;
         $success['user'] =  $user;
         return $this->sendResponse($success, 'User register successfully.');
     }
-    public function forgotPassword(Request $request)
+    public function resetPassword(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
+            'password' => 'required',
         ]);
         if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors());
         }
         $user = User::whereEmail($request->email)->first();
         if ($user) {
-            $credentials = $validator->validated();
-
-            Password::sendResetLink($credentials);
 
             return $this->sendResponse([], 'User register successfully.');
         } else {
@@ -87,7 +94,7 @@ class AuthController extends BaseController
 
         // generate otp code for user to use
 
-        $code = Str::random(4);
+        $code = random_int(10000, 99999);
         $otp = new OtpCode();
         $otp->code = $code;
         $otp->email = $request->email;
@@ -102,6 +109,7 @@ class AuthController extends BaseController
          * Also, call the send() method to incloude the
          * HelloEmail class that contains the email template.
          */
+        // Mail::to($reveiverEmailAddress)->send(new ConfirmEmail($otp));
         try {
             //code...
             Mail::to($reveiverEmailAddress)->send(new ConfirmEmail($otp));
@@ -171,13 +179,19 @@ class AuthController extends BaseController
         $twilio_sid = getenv("TWILIO_SID");
         $twilio_verify_sid = getenv("TWILIO_VERIFY_SID");
         $twilio = new Client($twilio_sid, $token);
-        $verification = $twilio->verify->v2->services($twilio_verify_sid)
-            ->verificationChecks
-            ->create($request->verification_code, array('to' => $request->phone_number));
-        if ($verification->valid) {
-            return $this->sendResponse([], 'Mobile verified Successfully');
-        }else{
+        try {
+            $verification = $twilio->verify->v2->services($twilio_verify_sid)
+                ->verificationChecks
+                ->create(['code'=>$request->code, 'to' => $request->mobile_number]);
+                if ($verification->valid) {
+                    return $this->sendResponse([], 'Mobile verified Successfully');
+                }else{
+                    return $this->sendError('Otp verification failed', []);
+                }
+        } catch (\Throwable $th) {
+            dd($th);
             return $this->sendError('Otp verification failed', []);
         }
+
     }
 }

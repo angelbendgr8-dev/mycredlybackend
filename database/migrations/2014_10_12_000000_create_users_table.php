@@ -26,6 +26,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('transaction_pin')->nullable();
+            $table->boolean('Auth2fa')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });
