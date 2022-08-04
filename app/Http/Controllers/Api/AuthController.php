@@ -102,13 +102,14 @@ class AuthController extends BaseController
          * Also, call the send() method to incloude the
          * HelloEmail class that contains the email template.
          */
-        try {
-            //code...
-            Mail::to($reveiverEmailAddress)->send(new ConfirmEmail($otp));
-            return $this->sendResponse([], 'Otp sent successfully.');
-        } catch (\Throwable $th) {
-            return $this->sendError('Unable to send otp', []);
-        }
+        Mail::to($reveiverEmailAddress)->send(new ConfirmEmail($otp));
+        return $this->sendResponse([], 'Otp sent successfully.');
+        // try {
+        //     //code...
+
+        // } catch (\Throwable $th) {
+        //     return $this->sendError('Unable to send otp', []);
+        // }
 
         /**
          * Check if the email has been sent successfully, or not.
