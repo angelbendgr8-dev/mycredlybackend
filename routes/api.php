@@ -33,6 +33,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::post('update/security', 'toggle2fa');
             Route::post('update/info', 'updateProfileInfo');
         });
+        
         Route::controller(BankAndCardController::class)->group(function () {
             Route::post('users/add/bank', 'updateProfilePics');
         });
