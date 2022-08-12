@@ -35,10 +35,11 @@ class AuthController extends BaseController
             $success['user'] =  $user;
             return $this->sendResponse($success, 'User login successfully.');
         } else {
-            // $response = ['message' => 'invalid email or password'];
-            return $this->sendError('invalid email or password.', $validator->errors());
+
+
+            $response = ['message' => 'invalid email or password'];
+            return $this->sendError('Invalid email or password', $validator->errors());
         }
-        // return response()->json($validator->validated());
     }
 
     public function register(Request $request)
@@ -64,7 +65,6 @@ class AuthController extends BaseController
         $user = User::create($input);
         $success['token'] =  $user->createToken('mycredly')->plainTextToken;
         $success['user'] =  $user;
-        return $this->sendResponse($success, 'User register successfully.');
     }
     public function resetPassword(Request $request)
     {
@@ -167,13 +167,12 @@ class AuthController extends BaseController
         $twilio = new Client($twilio_sid, $token);
         try {
             $twilio->verify->v2->services($twilio_verify_sid)
-            ->verifications
-            ->create($request->mobile_number, "sms");
+                ->verifications
+                ->create($request->mobile_number, "sms");
             return $this->sendResponse([], 'Otp sent successfully.');
         } catch (\Throwable $th) {
             return $this->sendError('Unable to send otp', []);
         }
-
     }
 
     public function verifyMobile(Request $request)
@@ -186,16 +185,15 @@ class AuthController extends BaseController
         try {
             $verification = $twilio->verify->v2->services($twilio_verify_sid)
                 ->verificationChecks
-                ->create(['code'=>$request->code, 'to' => $request->mobile_number]);
-                if ($verification->valid) {
-                    return $this->sendResponse([], 'Mobile verified Successfully');
-                }else{
-                    return $this->sendError('Otp verification failed', []);
-                }
+                ->create(['code' => $request->code, 'to' => $request->mobile_number]);
+            if ($verification->valid) {
+                return $this->sendResponse([], 'Mobile verified Successfully');
+            } else {
+                return $this->sendError('Otp verification failed', []);
+            }
         } catch (\Throwable $th) {
             dd($th);
             return $this->sendError('Otp verification failed', []);
         }
-
     }
 }

@@ -1,5 +1,11 @@
 <?php
 
+use App\Http\Controllers\Api\WalletController;
+use App\Http\Livewire\CreateWalletType;
+use App\Http\Livewire\Login;
+use App\Http\Livewire\Dashboard;
+use App\Http\Livewire\ViewAssets;
+use App\Http\Livewire\ViewWalletType;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +19,25 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', Login::class)->name('login');
+
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth'])->name('dashboard');
+
+Route::get('/create/wallet',[WalletController::class,'initWallet']);
+
+// require __DIR__.'/auth.php';
+
+Route::middleware(['auth', 'user-access:admin'])->group(function () {
+    // Route::get('/dashboard',  () {
+    //     return view('dashboard');
+    // })->middleware(['auth'])->name('dashboard');
+
+
+    Route::get('/admin/home', Dashboard::class)->name('admin.home');
+    Route::get('/admin/add/wallet', CreateWalletType::class)->name('admin.add.assets');
+    Route::get('/admin/view/wallet/{id}', ViewAssets::class)->name('admin.view.assets');
+
+
 });
