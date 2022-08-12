@@ -35,10 +35,10 @@ class AuthController extends BaseController
             $success['user'] =  $user;
             return $this->sendResponse($success, 'User login successfully.');
         } else {
-            $response = ['message' => 'invalid email or password'];
-            return response()->json($response, 400);
+            // $response = ['message' => 'invalid email or password'];
+            return $this->sendError('invalid email or password.', $validator->errors());
         }
-        return response()->json($validator->validated());
+        // return response()->json($validator->validated());
     }
 
     public function register(Request $request)
@@ -120,7 +120,7 @@ class AuthController extends BaseController
             return $this->sendError('Unable to send otp', []);
         }
 
-      
+
 
         /**
          * Check if the email has been sent successfully, or not.
