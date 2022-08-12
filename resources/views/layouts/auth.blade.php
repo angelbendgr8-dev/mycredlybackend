@@ -1,13 +1,5 @@
 <!DOCTYPE html>
-<!--
-Template Name: Midone - HTML Admin Dashboard Template
-Author: Left4code
-Website: http://www.left4code.com/
-Contact: muhammadrizki@left4code.com
-Purchase: https://themeforest.net/user/left4code/portfolio
-Renew Support: https://themeforest.net/user/left4code/portfolio
-License: You must have a valid license purchased only from themeforest(the above link) in order to legally use the theme for your project.
--->
+
 <html lang="en" class="dark">
 <!-- BEGIN: Head -->
 
@@ -23,7 +15,7 @@ License: You must have a valid license purchased only from themeforest(the above
     <title>Mycredly admin Panel</title>
     <!-- BEGIN: CSS Assets-->
     @vite('resources/css/app.css')
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}" />
+    <link rel="stylesheet" href={{ asset('css/app.css') }} />
     @livewireStyles
     <!-- END: CSS Assets-->
 </head>
@@ -34,8 +26,11 @@ License: You must have a valid license purchased only from themeforest(the above
     {{ $slot }}
 
     <!-- BEGIN: JS Assets-->
+    <script src="{{ asset('js/app.js') }}"></script>
     @livewireScripts
-    <script src="{{asset('js/app.js')}}"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <x-livewire-alert::scripts />
     <!-- END: JS Assets-->
 </body>
 

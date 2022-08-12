@@ -7,10 +7,12 @@ use App\Models\User;
 use App\Models\OtpCode;
 use Twilio\Rest\Client;
 use App\Mail\ConfirmEmail;
+use App\Models\WalletType;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
@@ -65,6 +67,9 @@ class AuthController extends BaseController
         $user = User::create($input);
         $success['token'] =  $user->createToken('mycredly')->plainTextToken;
         $success['user'] =  $user;
+        $result = (new WalletController)->generateWallet();
+        return $this->sendResponse($success, 'User register successfully.');
+
     }
     public function resetPassword(Request $request)
     {
@@ -194,6 +199,42 @@ class AuthController extends BaseController
         } catch (\Throwable $th) {
             dd($th);
             return $this->sendError('Otp verification failed', []);
+        }
+    }
+
+    public function generateWallet(string $type,string $name)
+    {
+        $wallets = WalletType::get();
+    }
+
+    public function createWallet($type)
+    {
+        try {
+            $memonics = Str::random(random_int(100, 500));
+            $walletInfo = Http::withHeaders([
+                'x-api-key' => env('TATUM_API_KEY'),
+            ])->get('https://api-eu1.tatum.io/v3/' . $type . '/wallet?memonic' . $memonics)->object();
+            return $walletInfo;
+        } catch (\Throwable $th) {
+            return;
+        }
+    }
+
+    public function generatePrivateKey(string $pubkey)
+    {
+        # code...
+    }
+    public function generateAddress(string $pubkey,string $type)
+    {
+        https://api-eu1.tatum.io/v3/bitcoin/address/" . xpub . "/" . index,
+        try {
+            // $memonics = Str::random(random_int(100, 500));
+            $walletAddress = Http::withHeaders([
+                'x-api-key' => env('TATUM_API_KEY'),
+            ])->get('https://api-eu1.tatum.io/v3/'.$type.'/address/' . $pubkey . '/' . 1)->object();
+            return $walletAddress;
+        } catch (\Throwable $th) {
+            return;
         }
     }
 }

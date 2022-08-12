@@ -5,9 +5,11 @@ namespace App\Http\Livewire;
 use App\Models\User;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Login extends Component
 {
+    use LivewireAlert;
     public $email,$password;
 
 
@@ -28,10 +30,10 @@ class Login extends Component
             if(Auth::attempt(array('email'=> $validatedData['email'],'password'=> $validatedData['password']))){
                 return redirect(route('admin.home'));
             }else{
-                session()->flash('error',"Invalid Login details credentials");
+                $this->alert('error',"Invalid Login details credentials");
             }
         }else{
-            session()->flash('error',"Credential not found");
+            $this->alert('error',"Invalid Login details credentials");
         }
     }
     public function render()

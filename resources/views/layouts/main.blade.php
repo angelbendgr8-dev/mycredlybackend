@@ -121,7 +121,7 @@ License: You must have a valid license purchased only from themeforest(the above
             <div class="side-nav__devider my-6"></div>
             <ul>
                 <li>
-                    <a href="javascript:;.html" class="side-menu side-menu--active">
+                    <a href="{{route('admin.home')}}" class="side-menu side-menu--active">
                         <div class="side-menu__icon"> <i data-lucide="home"></i> </div>
                         <div class="side-menu__title">
                             Dashboard
@@ -306,9 +306,12 @@ License: You must have a valid license purchased only from themeforest(the above
     <script src="https://maps.googleapis.com/maps/api/js?key=[" your-google-map-api"]&libraries=places"></script>
     <script src="{{ asset('js/app.js') }}"></script>
 
-    <x-livewire-alert::scripts />
     @livewireScripts
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <x-livewire-alert::scripts />
+
     <!-- END: JS Assets-->
 </body>
 
 </html>
+π

@@ -24,13 +24,13 @@ class DatabaseSeeder extends Seeder
             'name' => 'Crypto',
         ]);
         // \App\Models\User::create([
-        //     'first_name' => 'MotoringApp',
+        //     'first_name' => 'Mycredly',
         //     'last_name' => 'Admin',
         //     'username' => 'SuperAdmin',
         //     'mobile_number' => '08100000000',
         //     'country' => 'Nigeria',
         //     'code' => '234',
-        //     'email' => 'admin@motoringapp.com',
+        //     'email' => 'admin@mycredly.com',
         //     'password' => Hash::make('password'),
         //     'type' => 1
         // ]);

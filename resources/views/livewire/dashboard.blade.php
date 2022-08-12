@@ -21,8 +21,8 @@
                     <h2 class="text-lg font-medium truncate mr-5">
                         General Report
                     </h2>
-                    <a href="" class="ml-auto flex items-center text-primary"> <i data-lucide="refresh-ccw"
-                            class="w-4 h-4 mr-3"></i> Reload Data </a>
+                    <button wire:click='generateWallet'  class="ml-auto flex items-center text-primary"> <i data-lucide="refresh-ccw"
+                            class="w-4 h-4 mr-3"></i> Reload Data </button>
                 </div>
                 <div class="grid grid-cols-12 gap-6 mt-5">
                     <div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
