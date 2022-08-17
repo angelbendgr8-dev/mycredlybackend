@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\WalletController;
+use App\Http\Livewire\AddBank;
 use App\Http\Livewire\CreateWalletType;
 use App\Http\Livewire\Login;
 use App\Http\Livewire\Dashboard;
@@ -37,6 +38,7 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
 
     Route::get('/admin/home', Dashboard::class)->name('admin.home');
     Route::get('/admin/add/wallet', CreateWalletType::class)->name('admin.add.assets');
+    Route::get('/admin/add/bank', AddBank::class)->name('admin.add.bank');
     Route::get('/admin/view/wallet/{id}', ViewAssets::class)->name('admin.view.assets');
 
 

@@ -8,12 +8,13 @@ use App\Models\WalletType;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\WalletResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
-class WalletController extends Controller
+class WalletController extends BaseController
 {
-    public function generateWallet()
+    public function generateWallet($id)
     {
         $wallets = WalletType::with('category')->get();
         // dd($wallets);
@@ -22,7 +23,7 @@ class WalletController extends Controller
                 $newwallet = $this->createWallet($wallet->name);
                 $address= $this->generateAddress($newwallet->xpub,$wallet->name);
                 $tempwall = new Wallet();
-               $tempwall->user_id = Auth::id();
+               $tempwall->user_id = $id;
                $tempwall->name = $wallet->symbol;
                $tempwall->wallet_category_id = $wallet->wallet_category_id;
                $tempwall->wallet_type_id = $wallet->id;
@@ -32,13 +33,14 @@ class WalletController extends Controller
               $tempwall->save();
             }else{
                 $tempwall = new Wallet();
-               $tempwall->user_id = Auth::id();
+               $tempwall->user_id = $id;
                $tempwall->name = $wallet->symbol;
                $tempwall->wallet_type_id = $wallet->id;
                $tempwall->wallet_category_id = $wallet->wallet_category_id;
                 $tempwall->save();
             }
         }
+        return;
     }
 
     public function createWallet($type)
@@ -70,5 +72,11 @@ class WalletController extends Controller
         } catch (\Throwable $th) {
             return;
         }
+    }
+
+    public function getWallets()
+    {
+        $wallets = WalletResource::collection(Wallet::whereUserId(Auth::id())->with(['wType','wCategory'])->get());
+        return $this->sendResponse($wallets, 'Wallets fetched successfully.');
     }
 }

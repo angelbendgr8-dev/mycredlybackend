@@ -30,4 +30,13 @@ class WalletType extends Model
     {
         return $this->belongsTo(WalletCategory::class, 'wallet_category_id');
     }
+    /**
+     * Get all of the comments for the WalletType
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function wallets()
+    {
+        return $this->hasMany(Wallet::class);
+    }
 }

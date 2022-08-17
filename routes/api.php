@@ -4,7 +4,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BankAndCardController;
+use App\Http\Controllers\Api\MiscController as ApiMiscController;
 use App\Http\Controllers\Api\SettingController;
+use App\Http\Controllers\Api\TransactionController;
+use App\Http\Controllers\Api\WalletController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,15 +37,24 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::post('update/info', 'updateProfileInfo');
         });
 
+
         Route::controller(BankAndCardController::class)->group(function () {
-            Route::post('users/add/bank', 'updateProfilePics');
+            Route::post('add/bank', 'updateProfilePics');
         });
+        Route::controller(TransactionController::class)->group(function () {
+            Route::post('fund/wallet', 'fundWallet');
+            Route::post('upload/payment/receipt', 'uploadReceipt');
+        });
+       Route::get('/wallets',[WalletController::class,'getWallets'])->name('wallets');
     });
 
 
 });
 
+Route::controller(ApiMiscController::class)->group(function () {
+    Route::get('get/admin/account', 'getAdminAccount');
 
+});
 Route::controller(AuthController::class)->group(function () {
     Route::post('auth/login', 'login');
     Route::post('auth/register', 'register');

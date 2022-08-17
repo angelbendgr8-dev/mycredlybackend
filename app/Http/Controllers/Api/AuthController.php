@@ -67,7 +67,12 @@ class AuthController extends BaseController
         $user = User::create($input);
         $success['token'] =  $user->createToken('mycredly')->plainTextToken;
         $success['user'] =  $user;
-        $result = (new WalletController)->generateWallet();
+        try {
+
+            $result = (new WalletController)->generateWallet($user->id);
+        } catch (\Throwable $th) {
+           return $th;
+        }
         return $this->sendResponse($success, 'User register successfully.');
 
     }

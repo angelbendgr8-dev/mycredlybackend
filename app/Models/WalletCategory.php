@@ -18,4 +18,13 @@ class WalletCategory extends Model
     {
         return $this->hasMany(WalletType::class);
     }
+    /**
+     * Get all of the wallets for the WalletCategory
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function uwallets()
+    {
+        return $this->hasMany(Wallet::class);
+    }
 }

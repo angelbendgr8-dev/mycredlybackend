@@ -25,7 +25,7 @@ class BankAndCardController extends BaseController
         $input = $request->all();
         $input['user_id'] = Auth::id();
         Bank::create($input);
-        return $this->sendResponse($input, 'User register successfully.');
+        return $this->sendResponse($input, 'Account Added successfully.');
     }
     public function deleteCard($id){
         $account = Bank::whereId($id)->whereUserId(Auth::id())->first();
