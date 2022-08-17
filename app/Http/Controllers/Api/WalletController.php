@@ -2,15 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\User;
+use App\Http\Resources\WalletResource;
 use App\Models\Wallet;
 use App\Models\WalletType;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Http\Resources\WalletResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class WalletController extends BaseController
 {
@@ -19,24 +16,24 @@ class WalletController extends BaseController
         $wallets = WalletType::with('category')->get();
         // dd($wallets);
         foreach ($wallets as $key => $wallet) {
-            if($wallet->wallet_category_id === 2){
+            if ($wallet->wallet_category_id === 2) {
                 $newwallet = $this->createWallet($wallet->name);
-                $address= $this->generateAddress($newwallet->xpub,$wallet->name);
+                $address = $this->generateAddress($newwallet->xpub, $wallet->name);
                 $tempwall = new Wallet();
-               $tempwall->user_id = $id;
-               $tempwall->name = $wallet->symbol;
-               $tempwall->wallet_category_id = $wallet->wallet_category_id;
-               $tempwall->wallet_type_id = $wallet->id;
-               $tempwall->mnemonic = $newwallet->mnemonic;
-               $tempwall->xpub = $newwallet->xpub;
-               $tempwall->address = $address->address;
-              $tempwall->save();
-            }else{
+                $tempwall->user_id = $id;
+                $tempwall->name = $wallet->symbol;
+                $tempwall->wallet_category_id = $wallet->wallet_category_id;
+                $tempwall->wallet_type_id = $wallet->id;
+                $tempwall->mnemonic = $newwallet->mnemonic;
+                $tempwall->xpub = $newwallet->xpub;
+                $tempwall->address = $address->address;
+                $tempwall->save();
+            } else {
                 $tempwall = new Wallet();
-               $tempwall->user_id = $id;
-               $tempwall->name = $wallet->symbol;
-               $tempwall->wallet_type_id = $wallet->id;
-               $tempwall->wallet_category_id = $wallet->wallet_category_id;
+                $tempwall->user_id = $id;
+                $tempwall->name = $wallet->symbol;
+                $tempwall->wallet_type_id = $wallet->id;
+                $tempwall->wallet_category_id = $wallet->wallet_category_id;
                 $tempwall->save();
             }
         }
@@ -51,7 +48,7 @@ class WalletController extends BaseController
                 'x-api-key' => env('TATUM_API_KEY'),
             ])->retry(3, 100)->get('https://api-eu1.tatum.io/v3/' . $type . '/wallet?memonic' . $memonics)->object();
             return $walletInfo;
-        } catch (\Throwable $th) {
+        } catch (\Throwable$th) {
             return;
         }
     }
@@ -60,23 +57,38 @@ class WalletController extends BaseController
     {
         # code...
     }
-    public function generateAddress(string $pubkey,string $type)
+    public function generateAddress(string $pubkey, string $type)
     {
         // https://api-eu1.tatum.io/v3/bitcoin/address/" . xpub . "/" . index,
         try {
             // $memonics = Str::random(random_int(100, 500));
             $walletAddress = Http::withHeaders([
                 'x-api-key' => env('TATUM_API_KEY'),
-            ])->retry(3, 100)->get('https://api-eu1.tatum.io/v3/'.$type.'/address/' . $pubkey . '/' . 1)->object();
+            ])->retry(3, 100)->get('https://api-eu1.tatum.io/v3/' . $type . '/address/' . $pubkey . '/' . 1)->object();
             return $walletAddress;
-        } catch (\Throwable $th) {
+        } catch (\Throwable$th) {
             return;
         }
     }
 
     public function getWallets()
     {
-        $wallets = WalletResource::collection(Wallet::whereUserId(Auth::id())->with(['wType','wCategory'])->get());
-        return $this->sendResponse($wallets, 'Wallets fetched successfully.');
+        $wallet = Wallet::whereUserId(Auth::id());
+        if ($wallet) {
+            $wallets = WalletResource::collection(Wallet::whereUserId(Auth::id())->with(['wType', 'wCategory'])->get());
+            return $this->sendResponse($wallets, 'Wallets fetched successfully.');
+        } else {
+
+            try {
+
+                $result = $this->generateWallet(Auth::id());
+                $wallets = WalletResource::collection(Wallet::whereUserId(Auth::id())->with(['wType', 'wCategory'])->get());
+                return $this->sendResponse($wallets, 'Wallets fetched successfully.');
+            } catch (\Throwable$th) {
+                return $th;
+            }
+        }
+
     }
+
 }
