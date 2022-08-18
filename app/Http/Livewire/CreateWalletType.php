@@ -12,7 +12,7 @@ class CreateWalletType extends Component
 {
     use WithFileUploads;
     use LivewireAlert;
-    public $name, $icon, $symbol,$categories,$category;
+    public $name, $icon, $symbol,$categories,$category,$sign;
 
     protected $rules = [
         'name' => 'required|string',
@@ -35,6 +35,7 @@ class CreateWalletType extends Component
         $validatedData = $this->validate();
         $validatedData['wallet_category_id'] = $validatedData['category'];
         $validatedData['icon'] = $this->icon->store('assets','public');
+        $validatedData['sign'] = $this->sign;
         // dd
         WalletType::create($validatedData);
         $this->alert('success', 'Asset added Successfully');
@@ -43,6 +44,7 @@ class CreateWalletType extends Component
         $this->category = '';
         $this->icon = '';
         $this->symbol = '';
+        $this->sign = '';
 
     }
     public function render()

@@ -23,16 +23,16 @@ class DatabaseSeeder extends Seeder
         \App\Models\WalletCategory::create([
             'name' => 'Crypto',
         ]);
-        // \App\Models\User::create([
-        //     'first_name' => 'Mycredly',
-        //     'last_name' => 'Admin',
-        //     'username' => 'SuperAdmin',
-        //     'mobile_number' => '08100000000',
-        //     'country' => 'Nigeria',
-        //     'code' => '234',
-        //     'email' => 'admin@mycredly.com',
-        //     'password' => Hash::make('password'),
-        //     'type' => 1
-        // ]);
+        \App\Models\User::create([
+            'first_name' => 'Mycredly',
+            'last_name' => 'Admin',
+            'username' => 'SuperAdmin',
+            'mobile_number' => '08100000000',
+            'country' => 'Nigeria',
+            'code' => '234',
+            'email' => 'admin@mycredly.com',
+            'password' => Hash::make('password'),
+            'type' => 1
+        ]);
     }
 }

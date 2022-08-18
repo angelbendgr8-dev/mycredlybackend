@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignId('wallet_category_id')->constrained('wallet_categories');
             $table->string('icon');
             $table->string('symbol');
+            $table->string('sign')->nullable();
             $table->timestamps();
         });
     }

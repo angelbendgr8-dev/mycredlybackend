@@ -72,6 +72,17 @@
                             <p class="text-red-400 float-right">{{ $message }}</p>
                         </div>
                     @enderror
+                    <div class="mt-3 clear-right">
+                        <label for="regular-form-3" class="form-label">Sign ($)</label>
+                        <input wire:model='sign' id="regular-form-3" type="text" class="form-control"
+                            placeholder="With help">
+                       
+                    </div>
+                    @error('sign')
+                        <div class="my-2">
+                            <p class="text-red-400 float-right">{{ $message }}</p>
+                        </div>
+                    @enderror
                     <div class="flex flex-row justify-center clear-right">
                         <a href="#" wire:click='addAsset' class="btn btn-primary self-center mr-1 mb-2 px-4">
 

@@ -73,8 +73,9 @@ class WalletController extends BaseController
 
     public function getWallets()
     {
-        $wallet = Wallet::whereUserId(Auth::id());
-        if ($wallet) {
+        $wallet = Wallet::whereUserId(Auth::id())->get();
+        // return $wallet;
+        if (count($wallet)> 0) {
             $wallets = WalletResource::collection(Wallet::whereUserId(Auth::id())->with(['wType', 'wCategory'])->get());
             return $this->sendResponse($wallets, 'Wallets fetched successfully.');
         } else {

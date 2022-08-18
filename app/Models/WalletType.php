@@ -9,7 +9,7 @@ class WalletType extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name','icon','symbol','wallet_category_id'
+        'name','icon','symbol','wallet_category_id','sign'
     ];
 
     // /**

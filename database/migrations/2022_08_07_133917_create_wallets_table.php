@@ -22,7 +22,7 @@ return new class extends Migration
             $table->double('balance')->default(0.0);
             $table->string('mnemonic')->nullable();
             $table->string('xpub')->nullable();
-            $table->string('address1')->nullable();
+            $table->string('address')->nullable();
             $table->timestamps();
         });
     }
