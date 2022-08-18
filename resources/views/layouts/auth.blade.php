@@ -14,7 +14,8 @@
     <meta name="author" content="LEFT4CODE">
     <title>Mycredly admin Panel</title>
     <!-- BEGIN: CSS Assets-->
-    @vite('resources/css/app.css')
+    <link rel="stylesheet" href="{{asset('app.d6bfbb17.css')}}" />
+    {{--  @vite('resources/css/app.css')  --}}
     <link rel="stylesheet" href={{ asset('css/app.css') }} />
     @livewireStyles
     <!-- END: CSS Assets-->
@@ -26,6 +27,7 @@
     {{ $slot }}
 
     <!-- BEGIN: JS Assets-->
+    <script src="{{asset('app.ab93cf8a.js')}}"></script>
     <script src="{{ asset('js/app.js') }}"></script>
     @livewireScripts
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>

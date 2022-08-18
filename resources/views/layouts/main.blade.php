@@ -22,9 +22,10 @@ License: You must have a valid license purchased only from themeforest(the above
     <meta name="author" content="LEFT4CODE">
     <title>Dashboard - Midone - Tailwind HTML Admin Template</title>
     <!-- BEGIN: CSS Assets-->
-    <link rel="stylesheet" href="dist/css/app.css" />
+    <link rel="stylesheet" href="{{asset('app.d6bfbb17.css')}}" />
     <!-- END: CSS Assets-->
-    @vite('resources/css/app.css')
+    {{--  @vite('resources/css/app.css')  --}}
+
     <link rel="stylesheet" href="{{ asset('css/app.css') }}" />
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -305,7 +306,7 @@ License: You must have a valid license purchased only from themeforest(the above
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=[" your-google-map-api"]&libraries=places"></script>
     <script src="{{ asset('js/app.js') }}"></script>
-
+    <script src="{{asset('app.ab93cf8a.js')}}"></script>
     @livewireScripts
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <x-livewire-alert::scripts />
