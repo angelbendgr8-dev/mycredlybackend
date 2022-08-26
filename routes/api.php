@@ -39,11 +39,15 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
         Route::controller(BankAndCardController::class)->group(function () {
-            Route::post('add/bank', 'updateProfilePics');
+            Route::post('add/bank', 'addNewBank');
+            Route::get('get/banks', 'getBanks');
         });
         Route::controller(TransactionController::class)->group(function () {
             Route::post('fund/wallet', 'fundWallet');
+            Route::post('withdraw/funds', 'withdrawFunds');
             Route::post('upload/payment/receipt', 'uploadReceipt');
+            Route::get('get/transactions', 'getTransactions');
+            Route::get('get/withdrawals', 'getWithdrawals');
         });
        Route::get('/wallets',[WalletController::class,'getWallets'])->name('wallets');
     });

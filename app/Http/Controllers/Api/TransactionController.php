@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Bank;
+use App\Models\Withdrawal;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -53,4 +54,37 @@ class TransactionController extends BaseController
             return $this->sendError('Unable to upload reciept', $th);
         }
     }
+    public function withdrawFunds(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'amount' => 'required|numeric',
+            'wallet_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendError('Validation Error.', $validator->errors());
+        }
+        $credentials = $validator->validated();
+        $credentials['user_id'] = Auth::id();
+        $credentials['bank_id'] = $request->bank_id?? null;
+        $credentials['address'] = $request->address?? null;
+        $credentials['type'] = $request->type;
+        $credentials['network'] = $request->network?? null;
+
+        $withdrawal = Withdrawal::create($credentials);
+        return $this->sendResponse($withdrawal, 'Withdrawal created successfully');
+
+    }
+
+    public function getTransactions()
+    {
+        $transactions = Transaction::whereUserId(Auth::id())->get();
+        return $this->sendResponse($transactions, 'Transaction Fetched successfully');
+    }
+    public function getWithdrawals()
+    {
+        $transactions = Withdrawal::whereUserId(Auth::id())->get();
+        return $this->sendResponse($transactions, 'Withdrawals Fetched successfully');
+    }
+
 }
