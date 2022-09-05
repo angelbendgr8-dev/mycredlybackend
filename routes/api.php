@@ -45,11 +45,19 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::controller(TransactionController::class)->group(function () {
             Route::post('fund/wallet', 'fundWallet');
             Route::post('withdraw/funds', 'withdrawFunds');
+            Route::post('create/listing', 'createListing');
+            Route::get('get/available/listing', 'getListing');
             Route::post('upload/payment/receipt', 'uploadReceipt');
             Route::get('get/transactions', 'getTransactions');
             Route::get('get/withdrawals', 'getWithdrawals');
+
         });
-       Route::get('/wallets',[WalletController::class,'getWallets'])->name('wallets');
+
+        Route::controller(WalletController::class)->group(function () {
+            Route::get('/wallets','getWallets')->name('wallets');
+            Route::get('get/balance/{id}','getBalance')->name('wallet.balance');
+        });
+
     });
 
 
@@ -57,6 +65,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::controller(ApiMiscController::class)->group(function () {
     Route::get('get/admin/account', 'getAdminAccount');
+    Route::get('get/wallet/types', 'getWalletType');
+    Route::get('conversion/rate/{symbol}/{convert}/{amount}','getConversionRate');
 
 });
 Route::controller(AuthController::class)->group(function () {

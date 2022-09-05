@@ -92,4 +92,21 @@ class WalletController extends BaseController
 
     }
 
+    public function getBalance($id)
+    {
+        $wallet = Wallet::whereId($id)->with('wtype','wcategory')->first();
+        try {
+            // $memonics = Str::random(random_int(100, 500));
+            $balance = Http::withHeaders([
+                'x-api-key' => env('TATUM_API_KEY'),
+            ])->retry(3, 100)->get('https://api-eu1.tatum.io/v3/' . $wallet->wtype->name . '/address/balance/' . $wallet->address)->object();
+        $wallet->balance = $balance->incoming;
+        $wallet->save();
+        $newwallet = new WalletResource(Wallet::whereId($id)->with('wtype','wcategory')->first());
+        return $this->sendResponse($newwallet, 'Wallets balance successfully.');
+        } catch (\Throwable$th) {
+            return $th;
+        }
+    }
+
 }

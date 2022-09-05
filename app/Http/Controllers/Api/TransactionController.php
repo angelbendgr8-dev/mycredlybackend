@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Bank;
+use App\Models\Listing;
 use App\Models\Withdrawal;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
@@ -85,6 +86,24 @@ class TransactionController extends BaseController
     {
         $transactions = Withdrawal::whereUserId(Auth::id())->get();
         return $this->sendResponse($transactions, 'Withdrawals Fetched successfully');
+    }
+
+    public function createListing(Request $request)
+    {
+        $data = $request->all();
+        $data['user_id'] = Auth::id();
+        try {
+            $listing = Listing::create($data);
+            return $this->sendResponse($listing, 'Listing Created successfully');
+        } catch (\Throwable $th) {
+            return $this->sendError('Unable to create listing', $th);
+        }
+
+    }
+    public function getListing()
+    {
+        $listings = Listing::whereAvailable(true)->with('user')->get();
+        return $this->sendResponse($listings, 'Listings Fetched successfully');
     }
 
 }

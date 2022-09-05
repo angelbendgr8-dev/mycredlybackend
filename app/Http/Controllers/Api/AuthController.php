@@ -33,7 +33,7 @@ class AuthController extends BaseController
         $credentials = $validator->validated();
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
-            $success['token'] =  $user->createToken('motoringapp')->plainTextToken;
+            $success['token'] =  $user->createToken('mycredly')->plainTextToken;
             $success['user'] =  $user;
             return $this->sendResponse($success, 'User login successfully.');
         } else {
@@ -67,7 +67,7 @@ class AuthController extends BaseController
         $user = User::create($input);
         $success['token'] =  $user->createToken('mycredly')->plainTextToken;
         $success['user'] =  $user;
-       
+
         return $this->sendResponse($success, 'User register successfully.');
 
     }
