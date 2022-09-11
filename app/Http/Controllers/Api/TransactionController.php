@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Bank;
 use App\Models\Listing;
+use App\Models\Trading;
 use App\Models\Withdrawal;
 use App\Models\Transaction;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -104,6 +106,19 @@ class TransactionController extends BaseController
     {
         $listings = Listing::whereAvailable(true)->with('user')->get();
         return $this->sendResponse($listings, 'Listings Fetched successfully');
+    }
+    public function createTrading(Request $request){
+        $data = $request->all();
+        $data['user_id'] = Auth::id();
+        $data['trans_id'] = Str::random(16);
+        // return $data;
+        try {
+            $trading = Trading::create($data);
+            return $this->sendResponse($trading, 'Trading Created successfully');
+        } catch (\Throwable $th) {
+            return $th;
+            return $this->sendError('Unable to create trading', $th);
+        }
     }
 
 }

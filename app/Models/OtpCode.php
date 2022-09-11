@@ -13,7 +13,7 @@ class OtpCode extends Model
     use Expirable;
 
     protected $fillable = [
-        'code','email','user_id'
+        'code','email'
     ];
 
     public static function defaultExpiresAt()

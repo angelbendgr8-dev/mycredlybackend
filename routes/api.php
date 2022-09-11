@@ -50,6 +50,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::post('upload/payment/receipt', 'uploadReceipt');
             Route::get('get/transactions', 'getTransactions');
             Route::get('get/withdrawals', 'getWithdrawals');
+            Route::post('/create/trading','createTrading');
 
         });
 
