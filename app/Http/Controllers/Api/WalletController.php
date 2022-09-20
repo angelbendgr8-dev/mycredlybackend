@@ -19,6 +19,7 @@ class WalletController extends BaseController
             if ($wallet->wallet_category_id === 2) {
                 $newwallet = $this->createWallet($wallet->name);
                 $address = $this->generateAddress($newwallet->xpub, $wallet->name);
+                $key = $this->generatePrivateKey($newwallet->mnemonic, $wallet->name);
                 $tempwall = new Wallet();
                 $tempwall->user_id = $id;
                 $tempwall->name = $wallet->symbol;
@@ -27,6 +28,7 @@ class WalletController extends BaseController
                 $tempwall->mnemonic = $newwallet->mnemonic;
                 $tempwall->xpub = $newwallet->xpub;
                 $tempwall->address = $address->address;
+                $tempwall->private_key = $key->key;
                 $tempwall->save();
             } else {
                 $tempwall = new Wallet();
@@ -53,9 +55,21 @@ class WalletController extends BaseController
         }
     }
 
-    public function generatePrivateKey(string $pubkey)
+    public function generatePrivateKey(string $memonics,string $type)
     {
-        # code...
+        try {
+            // $memonics = Str::random(random_int(100, 500));
+            $privateKey = Http::withHeaders([
+                'x-api-key' => env('TATUM_API_KEY'),
+        ])->retry(3, 100)->post('https://api-eu1.tatum.io/v3/' . $type . '/wallet/priv',[
+
+                'index' => 0,
+                'mnemonic' => $memonics,
+            ])->object();
+            return $privateKey;
+        } catch (\Throwable$th) {
+            return;
+        }
     }
     public function generateAddress(string $pubkey, string $type)
     {

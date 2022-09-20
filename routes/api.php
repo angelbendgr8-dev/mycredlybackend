@@ -51,6 +51,12 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('get/transactions', 'getTransactions');
             Route::get('get/withdrawals', 'getWithdrawals');
             Route::post('/create/trading','createTrading');
+            Route::get('/get/trading/history','getTrading');
+            Route::post('/cancel/trading','cancelTrading');
+            Route::post('/complete/trading','completeTrading');
+            Route::post('/appeal/trading','appealTrading');
+            Route::post('/dispute/trading','disputeTrading');
+            Route::post('/confirm/trading/payment','confirmTradingPayment');
 
         });
 

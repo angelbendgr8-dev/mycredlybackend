@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('mnemonic')->nullable();
             $table->string('xpub')->nullable();
             $table->string('address')->nullable();
+            $table->string('private_key')->nullable();
             $table->timestamps();
         });
     }

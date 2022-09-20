@@ -87,4 +87,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Listing::class);
     }
+
+    /**
+     * Get all of the trades for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function trades(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
 }
